@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>URL Shortener</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f4f4f4;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    input, button {
+      width: 100%;
+      padding: 0.8rem;
+      margin: 0.5rem 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .result, .original {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      background-color: #e9f5e9;
+      border: 1px solid #b2d8b2;
+      border-radius: 6px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+    }
+
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+
+    th, td {
+      padding: 0.5rem;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+  <h1>URL Shortener Service</h1>
+  <div class="container">
+
+    <!-- Shorten URL Form -->
+    <h2>Shorten a URL</h2>
+    <input type="text" id="originalUrl" placeholder="Enter original URL" />
+    <input type="text" id="customCode" placeholder="Optional custom short code" />
+    <button onclick="shortenUrl()">Shorten</button>
+    <div id="shortResult" class="result" style="display:none;"></div>
+
+    <!-- Get Original URL -->
+    <h2>Get Original URL</h2>
+    <input type="text" id="shortCode" placeholder="Enter short code" />
+    <button onclick="getOriginal()">Get Original</button>
+    <div id="originalResult" class="original" style="display:none;"></div>
+
+    <!-- Show All Mappings -->
+    <h2>All Shortened URLs</h2>
+    <button onclick="loadAllMappings()">Load All</button>
+    <table id="mappingsTable" style="display:none;">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Original URL</th>
+          <th>Short Code</th>
+        </tr>
+      </thead>
+      <tbody id="mappingsBody"></tbody>
+    </table>
+  </div>
+
+  <script>
+    const API = "http://localhost:8080";
+
+    async function shortenUrl() {
+      const originalUrl = document.getElementById("originalUrl").value;
+      const customCode = document.getElementById("customCode").value;
+
+      const res = await fetch(`${API}/shorten`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ originalUrl, customCode }),
+      });
+
+      const shortCode = await res.text();
+      document.getElementById("shortResult").style.display = "block";
+      document.getElementById("shortResult").innerHTML = `
+        Short URL: <a href="${API}/${shortCode}" target="_blank">${API}/${shortCode}</a>
+      `;
+    }
+
+    async function getOriginal() {
+      const code = document.getElementById("shortCode").value;
+
+      const res = await fetch(`${API}/getOriginal/${code}`);
+      if (res.ok) {
+        const url = await res.text();
+        document.getElementById("originalResult").style.display = "block";
+        document.getElementById("originalResult").textContent = `Original URL: ${url}`;
+      } else {
+        document.getElementById("originalResult").style.display = "block";
+        document.getElementById("originalResult").textContent = "Short code not found.";
+      }
+    }
+
+    async function loadAllMappings() {
+      const res = await fetch(`${API}/getAll`);
+      const data = await res.json();
+
+      const tbody = document.getElementById("mappingsBody");
+      tbody.innerHTML = "";
+
+      data.forEach(entry => {
+        const row = `<tr>
+          <td>${entry.id}</td>
+          <td><a href="${entry.originalUrl}" target="_blank">${entry.originalUrl}</a></td>
+          <td><a href="${API}/${entry.shortCode}" target="_blank">${entry.shortCode}</a></td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+
+      document.getElementById("mappingsTable").style.display = "table";
+    }
+  </script>
+</body>
+</html>
