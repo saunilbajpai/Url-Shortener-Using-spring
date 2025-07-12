@@ -1,6 +1,0 @@
-com\example\URL\shortner\Controller\UrlController.class
-com\example\URL\shortner\Data\Urlchangedto.class
-com\example\URL\shortner\Model\UrlMapping.class
-com\example\URL\shortner\Repository\UrlMappingRepo.class
-com\example\URL\shortner\Service\UrlMappingService.class
-com\example\URL\shortner\UrlShortnerApplication.class
