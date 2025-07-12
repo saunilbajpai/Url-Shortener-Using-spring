@@ -1,0 +1,2 @@
+update users set password='$2a$10$qQmnouKxPlPDoUGwcqSgg.Gjdz3ENdqmpUxepLwDRJmIGb5paNk7G' where email='admin@gmail.com';
+update users set password='$2a$10$PC9AaQoZHPNFb47Pt4Jw8ei.ILmzcGP0kqaJS5wosu8L7ZmYK/O/a' where email='siva@gmail.com';

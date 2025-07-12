@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+            line-height: 1.6;
+        }
+
+        /* Jumbotron Styles */
+        .jumbotron {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border-radius: 12px !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem 2rem !important;
+            margin-bottom: 2rem;
+        }
+
+        .jumbotron .lead {
+            font-size: 1.25rem;
+            font-weight: 400;
+            margin-bottom: 0;
+        }
+
+        /* Card Styles */
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            font-weight: 600;
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px 12px 0 0 !important;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Form Styles */
+        .form-control {
+            padding: 0.75rem 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-control:focus {
+            border-color: #2575fc;
+            box-shadow: 0 0 0 0.25rem rgba(37, 117, 252, 0.15);
+        }
+
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-text {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+
+        .form-check-input:checked {
+            background-color: #2575fc;
+            border-color: #2575fc;
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            background-color: #2575fc;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #1a65e0;
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        /* Table Styles */
+        .table {
+            margin-top: 1.5rem;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .table thead th {
+            background-color: #f1f3f5;
+            border-bottom: none;
+            font-weight: 600;
+            padding: 1rem 1.25rem;
+        }
+
+        .table tbody td {
+            padding: 1rem 1.25rem;
+            vertical-align: middle;
+            border-top: 1px solid #f1f3f5;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(37, 117, 252, 0.03);
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(0, 0, 0, 0.01);
+        }
+
+        /* Alert Styles */
+        .alert-info {
+            background-color: #e7f5ff;
+            border-color: #d0ebff;
+            color: #1864ab;
+            border-radius: 8px;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .jumbotron {
+                padding: 1.5rem !important;
+            }
+
+            .card-body {
+                padding: 1.25rem;
+            }
+
+            .table thead {
+                display: none;
+            }
+
+            .table, .table tbody, .table tr, .table td {
+                display: block;
+                width: 100%;
+            }
+
+            .table tr {
+                margin-bottom: 1rem;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            }
+
+            .table td {
+                padding: 0.75rem;
+                text-align: right;
+                position: relative;
+            }
+
+            .table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 1rem;
+                top: 0.75rem;
+                font-weight: 600;
+                text-align: left;
+            }
+
+            .table td a {
+                word-break: break-all;
+            }
+        }
+
+        /* Animation for URL creation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .table tbody tr {
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        /* Add this to your HTML head to load the Inter font */
+        /* <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"> */
+    </style>
+    <title>Home</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="jumbotron bg-light p-5 rounded-3 my-4">
+        <p class="lead">A simple URL shortener service. Create short, easy-to-share links.</p>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Create a Short URL</h5>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/short-urls}" method="post"
+                  th:object="${createShortUrlForm}">
+                <div class="mb-3">
+                    <label for="originalUrl" class="form-label">Original URL</label>
+                    <input type="text" class="form-control" id="originalUrl"
+                           th:field="*{originalUrl}"
+                           placeholder="https://example.com/my-long-url">
+                    <div class="text-danger"
+                         th:if="${#fields.hasErrors('originalUrl')}"
+                         th:errors="*{originalUrl}"></div>
+                </div>
+
+                <div class="mb-3" sec:authorize="isAuthenticated()">
+                    <label for="expirationInDays" class="form-label">Expiration (days)</label>
+                    <input type="number" class="form-control" id="expirationInDays"
+                           th:field="*{expirationInDays}"
+                           min="1" max="365">
+                    <div class="form-text">Leave empty to never expire</div>
+                </div>
+                <div class="mb-3 form-check" sec:authorize="isAuthenticated()">
+                    <input type="checkbox" class="form-check-input" id="isPrivate" th:field="*{isPrivate}">
+                    <label class="form-check-label" for="isPrivate">Private (only you can access)</label>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Shorten URL</button>
+            </form>
+        </div>
+    </div>
+
+    <h2 class="mt-5">Public Shortened URLs</h2>
+    <div th:if="${shortUrls.data.isEmpty()}" class="alert alert-info">
+        No public URLs have been created yet.
+    </div>
+    <div th:unless="${shortUrls.data.isEmpty()}" class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th>Short URL</th>
+                <th>Original URL</th>
+                <th>Created By</th>
+                <th>Created</th>
+                <th>Expires</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="url : ${shortUrls.data}">
+                <td>
+                    <a th:href="@{/s/{key}(key=${url.shortKey})}" th:text="${baseUrl + '/s/' + url.shortKey}" target="_blank"></a>
+                </td>
+                <td>
+                    <a th:href="${url.originalUrl}" th:text="${#strings.abbreviate(url.originalUrl, 50)}" target="_blank"></a>
+                </td>
+                <td th:text="${url.createdBy != null ? url.createdBy.name : 'Guest'}"></td>
+                <td th:text="${#temporals.format(url.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${url.expiresAt != null ? #temporals.format(url.expiresAt, 'yyyy-MM-dd HH:mm') : 'Never'}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div th:insert="~{pagination}"></div>
+
+    </div>
+</div>
+</body>
+</html>
